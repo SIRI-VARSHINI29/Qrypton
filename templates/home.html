@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qrypton - Secure Your Videos</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <!-- Corrected: Link to styles.css in the static/css directory  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Base CSS Variables for the theme - Merged from styles.css, performance.html, testimonials.html */
+    :root {
+        --accent: #8A2BE2; /* A vibrant blue-violet */
+        --bg: #0C021C; /* Very dark purple */
+        --text: #ffffff; /* White text */
+        --muted: #B8A2D8; /* Muted light purple */
+        --header-bg: rgba(12, 2, 28, 0.85); /* Dark purple header with transparency */
+        --soft-grey: #E6D9F2; /* Softer light purple */
+        --landio-blue-grey: #D8BFD8; /* Thistle for "Qrypton" */
+        --subtext-color: rgba(230, 217, 242, 0.85); /* Light purple for tagline */
+
+        /* From performance.html & testimonials.html */
+        --purple-deep: #000000; /* Pure black for deeper contrast */
+        --purple-mid: rgba(255, 255, 255, 0.04); /* Adjusted for glassmorphism background */
+        --purple-accent: #a020f0; /* Brighter purple for accents/neon glow */
+        --purple-light: #6a5acd; /* Slightly softer purple for gradients */
+        --text-primary: #f4f4f5; /* Off-white for primary text */
+        --text-secondary: #a8a2b5; /* Muted gray for secondary text */
+        --border-color: rgba(255, 255, 255, 0.2); /* More prominent border for glass elements */
+        --glow-thin-color: rgba(160, 32, 240, 0.9); /* A brighter, thin glow color */
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth; /* Enables smooth scrolling for anchor links */
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative; /* For the body::before/::after glows */
+        z-index: 1; /* For the body::before/::after glows */
+    }
+
+    /* Enhanced Background Glows (from performance.html) */
+    body::before, body::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(150px);
+        opacity: 0.7;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    body::before { /* Top-left glow */
+        width: 600px;
+        height: 600px;
+        background: rgba(120, 0, 200, 0.6);
+        top: -200px;
+        left: -200px;
+    }
+
+    body::after { /* Bottom-right glow */
+        width: 800px;
+        height: 800px;
+        background: rgba(160, 32, 240, 0.7);
+        bottom: -300px;
+        right: -300px;
+    }
+
+    /* --- Header and Navigation --- */
+    header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: var(--header-bg);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        box-sizing: border-box;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-img {
+        height: 28px;
+        width: auto;
+        
+    }
+
+    nav {
+        display: flex;
+        gap: 1.5rem;
+        margin: 0 auto;
+        flex-grow: 1;
+        justify-content: center;
+    }
+
+    nav a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+        color: var(--text-secondary); /* Adjusted hover color */
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .login-btn {
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .login-btn:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+        position: relative;
+        overflow: hidden;
+        height: 100vh;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 2rem;
+        padding-top: 80px;
+        box-sizing: border-box;
+    }
+
+    .hero .bg-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        opacity: 0.7; /* Increased opacity for better visibility */
+        pointer-events: none;
+    }
+
+    .hero .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(12, 2, 28, 0.7); /* Decreased opacity for overlay */
+        z-index: -1;
+    }
+
+    .hero-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width:1600px;
+        width: 100%;
+    }
+
+    .top-icon-wrapper {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .center-icon {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        z-index: 1;
+    }
+
+    .icon-glow {
+        position: absolute;
+        inset: -15px;
+        background: radial-gradient(circle at center, rgba(138, 43, 226, 0.5) 0%, transparent 70%);
+        filter: blur(20px);
+        border-radius: 50%;
+        z-index: 0;
+        opacity: 0.7;
+    }
+
+    .whats-new {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+
+    .whats-new .dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        margin-right: 8px;
+        box-shadow: 0 0 8px var(--accent);
+    }
+
+    .hero-text {
+        text-align: center;
+        color: white;
+    }
+
+    .headline {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: clamp(2rem, 4vw, 3.8rem);
+        line-height: 1.1;
+        margin: 0;
+
+        background: linear-gradient(to right,
+            #B072D4 0%,
+            #D8BFD8 25%,
+            #E6D9F2 50%,
+            #D8BFD8 75%,
+            #B072D4 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+
+        letter-spacing: -0.02em;
+        text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .hero.visible .headline {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    .with-word {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        color: var(--soft-grey);
+    }
+
+    .landio {
+        font-family: 'Instrument Serif', serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--landio-blue-grey);
+    }
+
+    .subtext {
+        font-family: 'Inter', sans-serif;
+        margin-top: 1.2rem;
+        font-size: clamp(0.8rem, 1.0vw, 1.05rem);
+        color: var(--subtext-color);
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .cta-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-top: 2rem;
+    }
+
+    .glow-btn-wrapper {
+        position: relative;
+        display: inline-block;
+        border-radius: 12px;
+        overflow: visible;
+    }
+
+    .glow-border {
+        position: absolute;
+        inset: -2px;
+        border-radius: 14px;
+        pointer-events: none;
+        z-index: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(200,162,200,0.6) 0%, rgba(200,162,200,0.05) 80%, transparent 100%);
+        transition: background 0.15s;
+        filter: blur(2px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+    }
+
+    .get-started-btn {
+        position: relative;
+        z-index: 1;
+        background: #111114;
+        background-color: rgb(0, 0, 0);
+        color: #fff;
+        font-family: 'Inter', Arial, sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        padding: 16px 36px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        outline: none;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    .arrow {
+        display: flex;
+        align-items: center;
+        font-size: 1.2em;
+    }
+
+    /* --- Features Section (formerly About/Performance) --- */
+    .page-section {
+        padding: 40px 0; /* Minimized padding */
+        width: 90%;
+        max-width: 1000px;
+        margin: 0 auto;
+        min-height: 100vh; /* Ensure it fills the viewport */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center content vertically */
+        position: relative;
+        z-index: 1; /* Ensure content is above body glows */
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 30px; /* Minimized margin */
+    }
+
+    .section-header .subtitle {
+        color: var(--purple-light);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+    }
+
+    .section-header p {
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        color: var(--text-secondary);
+    }
+
+    /* Glassmorphism effect (from performance.html) */
+    .glassmorphism {
+        background: var(--purple-mid);
+        backdrop-filter: blur(40px) saturate(220%);
+        -webkit-backdrop-filter: blur(40px) saturate(220%);
+        border: 1px solid var(--border-color);
+        border-radius: 2rem;
+        box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.5);
+    }
+
+    /* Gradient Text for Main Titles (from performance.html) */
+    .gradient-text {
+        background: linear-gradient(to right, var(--text-primary), var(--purple-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+
+    /* Bento Grid Container (from performance.html) */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-auto-rows: minmax(140px, auto);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* Bento Grid Item Spans - for larger screens (Tablet and Desktop) */
+    @media (min-width: 768px) {
+        .bento-grid {
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(140px, auto);
+        }
+        .bento-item-col-2 { grid-column: span 2; }
+        .bento-item-col-3 { grid-column: span 3; }
+        .bento-item-col-4 { grid-column: span 4; }
+        .bento-item-row-2 { grid-row: span 2; }
+    }
+
+    /* Bento Item General Styling - applying glassmorphism directly to items */
+    .bento-item {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 1.5rem;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .bento-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 15px var(--purple-accent);
+    }
+
+    /* Pseudo-element for the animated GLOWING border */
+    .bento-item::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: inherit;
+        background: conic-gradient(
+            from 0deg at 50% 50%,
+            transparent 0%,
+            transparent 20%,
+            var(--glow-thin-color) 25%,
+            var(--glow-thin-color) 30%,
+            transparent 35%,
+            transparent 100%
+        );
+        animation: rotateBorderGlow 5s linear infinite;
+        z-index: 0;
+        opacity: 0.7;
+        pointer-events: none;
+        mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: source-out;
+    }
+
+    @keyframes rotateBorderGlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .bento-item .icon {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        color: var(--purple-accent);
+        position: relative;
+        z-index: 2;
+    }
+    .bento-item h3 {
+        font-size: 1.3rem;
+        margin-bottom: 6px;
+        color: var(--text-primary);
+        position: relative;
+        z-index: 2;
+    }
+    .bento-item p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Specific Metric Card Overrides/Enhancements */
+    .metric-card-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        padding: 0px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .metric-card-content h3 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+    .metric-card-content p {
+        font-size: 0.9rem;
+    }
+    .metric-card-content .value {
+        font-size: 2rem;
+        margin-bottom: 6px;
+    }
+    .metric-card-content .description {
+        font-size: 0.8rem;
+    }
+
+    /* Encryption Speed Animation (CSS-based circular progress) */
+    .encryption-progress-circle {
+        position: relative;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px auto;
+        overflow: hidden;
+        box-shadow: 0 0 12px var(--purple-accent);
+        z-index: 2;
+    }
+
+    .encryption-progress-circle::before {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        background-color: var(--purple-deep);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .encryption-progress-circle::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(var(--purple-accent) 0%, transparent 0%);
+        z-index: 0;
+        transform: rotate(-90deg);
+        transform-origin: center center;
+        animation-fill-mode: forwards;
+    }
+
+    .encryption-progress-circle .inner-text {
+        position: relative;
+        z-index: 2;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    /* Keyframes for initial fill */
+    @keyframes initialRingFill {
+        from { background: conic-gradient(var(--purple-accent) 0%, transparent 0%); }
+        to { background: conic-gradient(var(--purple-accent) 100%, transparent 100%); }
+    }
+
+    /* Keyframes for continuous fast spin */
+    @keyframes continuousFastSpin {
+        from { transform: rotate(-90deg); }
+        to { transform: rotate(270deg); }
+    }
+
+    /* Keyframes for subtle glow pulse */
+    @keyframes glowPulse {
+        0% { box-shadow: 0 0 12px var(--purple-accent); }
+        50% { box-shadow: 0 0 18px var(--purple-accent), 0 0 25px rgba(160, 32, 240, 0.3); }
+        100% { box-shadow: 0 0 12px var(--purple-accent); }
+    }
+
+    /* Apply animations */
+    .encryption-progress-circle.animate::after {
+        animation: initialRingFill 1.5s forwards, continuousFastSpin 0.8s linear 1.5s infinite;
+    }
+    .encryption-progress-circle.animate {
+        animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    /* Max File Visual */
+    .max-file-visual {
+        margin: 10px auto;
+    }
+    .max-file-visual .icon {
+        font-size: 2.2rem;
+        margin-bottom: 6px;
+    }
+    .max-file-visual .value {
+        font-size: 1.6rem;
+    }
+
+    /* Formats List */
+    .formats-list {
+        list-style: none;
+        padding: 0;
+        margin: 10px auto;
+        text-align: left;
+        width: fit-content;
+    }
+    .formats-list li {
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+    .formats-list li::before {
+        content: '•';
+        color: var(--purple-accent);
+        font-size: 1.2rem;
+        line-height: 1;
+        display: inline-block;
+        min-width: 15px;
+    }
+    .formats-list li.animated {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Concluding tagline styling */
+    .final-tagline {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        padding-bottom: 40px;
+    }
+
+    /* Scroll Animations (from performance.html) */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Message Box Styling (from performance.html) */
+    #messageBoxContainer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .message-box {
+        background-color: rgba(76, 175, 80, 0.8);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+    .message-box.error {
+        background-color: rgba(244, 67, 54, 0.8);
+    }
+    .message-box.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Testimonials Carousel (from testimonials.html) */
+    .testimonials-carousel {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+    }
+
+    .carousel-track {
+        display: flex;
+        gap: 20px;
+        animation: scroll-carousel 30s linear infinite;
+        width: max-content;
+    }
+
+    .testimonial-card {
+        flex: 0 0 auto;
+        width: 350px;
+        min-height: 220px;
+        padding: 30px;
+        border-radius: 1.5rem;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px var(--purple-accent);
+    }
+
+    .testimonial-text {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .author-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--purple-accent);
+        box-shadow: 0 0 10px rgba(160, 32, 240, 0.5);
+    }
+
+    .author-info strong {
+        display: block;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .author-info span {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    /* Infinite scroll animation */
+    @keyframes scroll-carousel {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(-1 * (350px + 20px) * 3));
+        }
+    }
+
+
+    /* Contact Section (from contact.html) */
+    .form-container {
+        background-color: rgba(38, 30, 51, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        box-shadow: 0 0 18px rgba(186, 104, 255, 0.6),
+                    0 15px 40px rgba(0, 0, 0, 0.5);
+        padding: 25px;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 800px; /* Increased max-width for rectangular shape */
+        animation: slideInFade 1s ease-out forwards;
+        color: #ffffff; /* Ensure text color is white within the form */
+    }
+
+    /* Keyframes for form entry animation */
+    @keyframes slideInFade {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-field, .select-field, .textarea-field {
+        background-color: rgba(74, 0, 119, 0.8);
+        border: none;
+        color: #ffffff;
+        padding: 14px 18px;
+        border-radius: 14px;
+        width: 100%;
+        box-sizing: border-box;
+        outline: none;
+        transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        font-size: 0.95rem;
+    }
+    .input-field::placeholder, .textarea-field::placeholder, .select-field option[value=""][disabled] {
+        color: #A0A0A0;
+        opacity: 0.8;
+    }
+    .input-field:focus, .select-field:focus, .textarea-field:focus {
+        background-color: rgba(111, 60, 253, 0.2);
+        border: 1px solid #A78BFA;
+        transform: scale(1.01);
+    }
+    .submit-button {
+        background: rgba(38, 30, 51, 0.7);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        color: #ffffff;
+        padding: 14px 30px;
+        border-radius: 25px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow:
+            inset 0 0 10px rgba(186, 104, 255, 0.15),
+            0 0 15px rgba(186, 104, 255, 0.25),
+            0 0 25px rgba(186, 104, 255, 0.15),
+            0 5px 15px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        width: 100%;
+        font-size: 1.1rem;
+        letter-spacing: 0.02em;
+    }
+    .submit-button:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            inset 0 0 15px rgba(186, 104, 255, 0.2),
+            0 0 25px rgba(186, 104, 255, 0.4),
+            0 0 35px rgba(186, 104, 255, 0.2),
+            0 10px 25px rgba(0, 0, 0, 0.5);
+        background: rgba(45, 35, 60, 0.8);
+    }
+
+    /* Keyframes for tag button pulse glow */
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 8px rgba(167, 139, 250, 0.4), 0 3px 12px rgba(0, 0, 0, 0.4); }
+        50% { box-shadow: 0 0 15px rgba(167, 139, 250, 0.6), 0 3px 15px rgba(0, 0, 0, 0.6); }
+        100% { box-shadow: 0 0 8px rgba(167, 139, 250, 0.4), 0 3px 12px rgba(0, 0, 0, 0.4); }
+    }
+
+    .tag-button {
+        background-color: rgba(74, 0, 119, 0.9);
+        color: #ffffff;
+        padding: 7px 20px;
+        border-radius: 24px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-block;
+        margin-bottom: 20px;
+        box-shadow: 0 0 8px rgba(167, 139, 250, 0.4),
+                    0 3px 12px rgba(0, 0, 0, 0.4);
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .tag-button:hover {
+        transform: translateY(-2px);
+        animation: pulseGlow 1.5s infinite ease-in-out;
+    }
+
+    /* Custom arrow for select dropdowns */
+    .select-field + .pointer-events-none svg {
+        color: #A0A0A0;
+        opacity: 0.8;
+        transition: color 0.3s ease;
+    }
+    .select-field:focus + .pointer-events-none svg {
+        color: #A78BFA;
+    }
+
+    /* --- Footer --- */
+    footer {
+        text-align: center;
+        padding: 2rem;
+        background: var(--bg);
+        color: var(--muted);
+        margin-top: auto;
+    }
+
+    /* --- Canvas Elements (Stars, Aura Stars) --- */
+    .aura-stars {
+        position: absolute;
+        top: -40px;
+        left: -40px;
+        width: calc(100% + 200px);
+        height: calc(100% + 200px);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 1;
+    }
+
+    /* --- Responsive Adjustments (Media Queries) --- */
+    @media (max-width: 1024px) {
+        .testimonials-carousel .section-header h2 {
+            font-size: 2.8rem;
+        }
+        .testimonial-card {
+            width: 320px;
+        }
+        @keyframes scroll-carousel {
+            to {
+                transform: translateX(calc(-1 * (320px + 20px) * 3));
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            padding: 0.8rem 1rem;
+        }
+        .header-left, .header-right {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        nav {
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            width: 100%;
+        }
+        .login-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        .hero {
+            padding-top: 120px;
+        }
+        .headline {
+            font-size: clamp(1.8rem, 6vw, 3.2rem);
+        }
+        .subtext {
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+        }
+        .get-started-btn {
+            font-size: 0.85rem;
+            padding: 10px 20px;
+            gap: 6px;
+        }
+        .logo-img {
+            height: 22px;
+        }
+        .top-icon-wrapper {
+            width: 60px;
+            height: 60px;
+        }
+        .whats-new {
+            font-size: 0.75rem;
+        }
+
+        /* Responsive adjustments for performance/features section */
+        .page-section {
+            padding: 30px 0;
+            min-height: auto;
+        }
+        .section-header {
+            margin-bottom: 20px;
+        }
+        .section-header h2 {
+            font-size: 1.8rem;
+        }
+        .section-header p {
+            font-size: 0.9rem;
+        }
+        .bento-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: auto;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .bento-item-col-2, .bento-item-row-2, .bento-item-col-3, .bento-item-col-4 {
+            grid-column: span 1 !important;
+            grid-row: span 1 !important;
+        }
+        .bento-item {
+            padding: 20px;
+        }
+        .bento-item .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .bento-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .bento-item p {
+            font-size: 0.85rem;
+        }
+        .metric-card-content h3 {
+            font-size: 1.4rem;
+        }
+        .metric-card-content .value {
+            font-size: 2rem;
+        }
+        .encryption-progress-circle {
+            width: 90px;
+            height: 90px;
+        }
+        .encryption-progress-circle::before {
+            width: 70px;
+            height: 70px;
+        }
+        .encryption-progress-circle .inner-text {
+            font-size: 1.2rem;
+        }
+        .max-file-visual .icon {
+            font-size: 2rem;
+        }
+        .max-file-visual .value {
+            font-size: 1.6rem;
+        }
+        .formats-list li {
+            font-size: 0.9rem;
+        }
+
+        /* Testimonials responsive adjustments */
+        .testimonials-carousel {
+            padding: 10px 0;
+        }
+        .carousel-track {
+            animation: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .testimonial-card {
+            width: 90%;
+            max-width: 350px;
+            margin: 0 auto;
+            min-height: auto;
+        }
+
+        /* Contact responsive adjustments */
+        .form-container {
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 90%; /* On smaller screens, limit to 90% width */
+        }
+        .form-container h1 { /* Adjusted from h1 to target only the form's h1 */
+            font-size: 2.8rem;
+        }
+        .form-container p { /* Adjusted from p to target only the form's p */
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+        .input-field, .select-field, .textarea-field, .submit-button {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+        }
+        .tag-button {
+            margin-bottom: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        header {
+            padding: 0.6rem 0.5rem;
+        }
+        nav {
+            gap: 0.6rem;
+        }
+        .headline {
+            font-size: clamp(1.6rem, 8vw, 2.8rem);
+        }
+        .subtext {
+            font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+        }
+        .get-started-btn {
+            font-size: 0.8rem;
+            padding: 8px 18px;
+        }
+        .section-header h2 {
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+        }
+        .section-header p {
+            font-size: 0.9rem;
+        }
+        /* Testimonials responsive adjustments */
+        .testimonials-carousel .section-header h2 {
+            font-size: 1.8rem;
+        }
+        .testimonial-text {
+            font-size: 1rem;
+        }
+        .author-image {
+            width: 50px;
+            height: 50px;
+        }
+        .author-info strong {
+            font-size: 1rem;
+        }
+        .author-info span {
+            font-size: 0.8rem;
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Message Box Container (for consistency) -->
+  <div id="messageBoxContainer"></div>
+
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <!-- Corrected: Image source using url_for -->
+        <img src="../static/assets/logo.png" alt="Qrypton Logo" class="logo-img" />
+      </div>
+    </div>
+    <nav>
+      <a href="#hero">Home</a>
+      <a href="#features-section">Features</a>
+      <a href="/index">Dashboard</a>
+      <a href="/register">Signup</a>
+      <a href="#contact-section">Contact</a>
+    </nav>
+    <div class="header-right">
+      <a href="/login" class="login-btn">Login</a>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <video autoplay muted loop playsinline class="bg-video">
+      <!-- Corrected: Video source using url_for -->
+      <source src="{{ url_for('static', filename='assets/background.mp4') }}" type="video/mp4" />
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="overlay"></div>
+
+    <div class="hero-content-wrapper">
+      <div class="top-icon-wrapper">
+        <!-- Corrected: Image source using url_for -->
+        <img src="../static/assets/logo.png" alt="Qrypton Icon" class="center-icon" />
+        <div class="icon-glow"></div>
+      </div>
+      <div class="whats-new">
+        <span class="dot"></span> What's New
+      </div>
+
+      <div class="hero-text">
+        <h1 class="headline">
+          Encrypted. Watermarked. Untouchable.<br />
+          <span class="with-word"> All with</span>
+          <span class="landio">Qrypton</span>
+        </h1>
+        <p class="subtext">Own Every Frame. What's Yours Stays Yours</p>
+      </div>
+
+      <div class="cta-wrapper">
+        <canvas id="aura-stars" class="aura-stars"></canvas>
+        <div class="glow-btn-wrapper">
+          <div class="glow-border"></div>
+          <button class="get-started-btn" onclick="location.href='/register'">
+            Get Started
+            <span class="arrow">
+              <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+                <path d="M7 13L13 7M13 7H7M13 7V13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  <!-- Features Section (Content from performance.html - About / Performance) -->
+  <main id="features-section">
+    <section class="page-section">
+      <div class="container">
+        <div class="section-header reveal">
+            <span class="subtitle">About / Features</span>
+            <h2 class="gradient-text">Qrypton Overview</h2>
+            <p>Discover the core advantages and powerful capabilities that make Qrypton your ultimate video security solution.</p>
+        </div>
+
+        <div class="bento-grid reveal">
+            <div class="bento-item bento-item-col-2">
+                <div class="icon">⚛️</div>
+                <h3>Quantum-Safe:</h3>
+                <p>Built to stop tomorrow’s hackers, today. Future-proof your valuable video assets against emerging threats.</p>
+            </div>
+            <div class="bento-item">
+                <div class="icon">✨</div>
+                <h3>Instant Watermarking:</h3>
+                <p>Keep your brand on every frame, seamlessly.</p>
+            </div>
+            <div class="bento-item">
+                <div class="icon">⚡</div>
+                <h3>Fast & Friendly:</h3>
+                <p>Upload big files, get quick results, no tech headaches.</p>
+            </div>
+            <div class="bento-item bento-item-col-2">
+                <div class="icon">🔗</div>
+                <h3>Unbreakable Key Sharing:</h3>
+                <p>Leveraging advanced Shamir's Secret Sharing, your encryption keys are distributed, ensuring no single point of failure.</p>
+                <p class="mt-4 text-sm text-gray-400">Security that adapts to any challenge.</p>
+            </div>
+            <div class="bento-item bento-item-col-2">
+                <div class="icon">💡</div>
+                <h3>Seamless User Experience:</h3>
+                <p>Qrypton combines robust security with a modern, intuitive interface—making advanced video protection accessible to everyone, not just tech experts.</p>
+            </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Performance Section (Content from performance.html - Key Metrics) -->
+  <main id="performance-section">
+    <section class="page-section">
+      <div class="container">
+        <div class="section-header reveal">
+            <span class="subtitle">Key Metrics</span>
+            <h2 class="gradient-text">Performance</h2>
+        </div>
+        <div class="bento-grid reveal">
+            <div class="bento-item bento-item-col-2">
+                <div class="metric-card-content">
+                    <div class="encryption-progress-circle">
+                        <span class="inner-text">Fast</span>
+                    </div>
+                    <h3>Encryption Speed</h3>
+                    <p class="description">Blazing fast processing for your videos.</p>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <div class="metric-card-content">
+                    <div class="max-file-visual">
+                        <span class="icon">💾</span>
+                        <span class="value" id="maxFileSizeValue">1</span>
+                    </div>
+                    <h3>Max File Size</h3>
+                    <p class="description">Supports large video files for comprehensive security.</p>
+                </div>
+            </div>
+
+            <div class="bento-item" id="formatsBentoItem">
+                <div class="metric-card-content">
+                    <h3>Supported Formats</h3>
+                    <ul class="formats-list">
+                        <li class="format-item">MP4</li>
+                        <li class="format-item">AVI</li>
+                        <li class="format-item">MOV</li>
+                    </ul>
+                    <p class="description">Versatile compatibility for your media, ensuring broad usability.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-tagline reveal">
+            <p>Qrypton is your shield for the future of video—secure, smart, and designed for you.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Testimonials Section -->
+  <main id="testimonials-section">
+    <section class="page-section">
+        <div class="section-header">
+            <span class="subtitle">Our Community</span>
+            <h2 class="gradient-text">Trusted Worldwide:</h2>
+            <p>Thousands of creators, teams, and organizations across the globe rely on Qrypton to keep their video content secure. Join a global community that values privacy and peace of mind.</p>
+        </div>
+
+        <h3 class="text-3xl font-semibold text-center mb-10 text-white">What People Are Saying</h3>
+
+        <div class="testimonials-carousel">
+            <div class="carousel-track">
+                <!-- Duplicate cards for infinite scroll effect - kept original structure from testimonials.html -->
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“Qrypton’s encryption is next-level. I can finally share my work without worrying about leaks or hacks.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=MT" alt="Mia T. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Mia T.</strong>
+                            <span>Filmmaker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“The key sharing system is brilliant. Even if someone accessed my files, my videos are still locked tight.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=AP" alt="Arun P. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Arun P.</strong>
+                            <span>Security Analyst</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“I love how easy it is to watermark my videos. The interface is clean, fast, and just works.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=ZL" alt="Zoe L. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Zoe L.</strong>
+                            <span>Content Creator</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Duplicate Set 1 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“Qrypton’s encryption is next-level. I can finally share my work without worrying about leaks or hacks.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=MT" alt="Mia T. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Mia T.</strong>
+                            <span>Filmmaker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“The key sharing system is brilliant. Even if someone accessed my files, my videos are still locked tight.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=AP" alt="Arun P. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Arun P.</strong>
+                            <span>Security Analyst</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“I love how easy it is to watermark my videos. The interface is clean, fast, and just works.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=ZL" alt="Zoe L. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Zoe L.</strong>
+                            <span>Content Creator</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Duplicate Set 2 -->
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“Qrypton’s encryption is next-level. I can finally share my work without worrying about leaks or hacks.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=MT" alt="Mia T. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Mia T.</strong>
+                            <span>Filmmaker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“The key sharing system is brilliant. Even if someone accessed my files, my videos are still locked tight.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=AP" alt="Arun P. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Arun P.</strong>
+                            <span>Security Analyst</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">“I love how easy it is to watermark my videos. The interface is clean, fast, and just works.”</p>
+                    <div class="testimonial-author">
+                        <img src="https://placehold.co/60x60/8a3ffc/ffffff?text=ZL" alt="Zoe L. Profile" class="author-image">
+                        <div class="author-info">
+                            <strong>Zoe L.</strong>
+                            <span>Content Creator</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  </main>
+
+  <!-- Contact Section -->
+  <main id="contact-section">
+    <section class="page-section flex items-center justify-center flex-col">
+        <!-- Main "Get In Touch" heading and sub-text -->
+        <div class="text-center mb-8">
+            <!-- Apply gradient-text and font-semibold for consistency -->
+            <h1 class="text-5xl font-semibold mb-3 gradient-text">Get In Touch</h1>
+            <p class="text-lg text-gray-300 leading-relaxed font-medium">
+                Have questions, feedback, or need support? Reach out to us!
+            </p>
+        </div>
+
+        <div class="form-container">
+            <!-- Form title "Contact Us" -->
+            <!-- Apply gradient-text and font-semibold for consistency -->
+            <h2 class="text-4xl font-semibold text-center mb-5 gradient-text">Contact Us</h2>
+
+            <form class="space-y-3">
+                <!-- Name Input -->
+                <div>
+                    <input type="text" id="name" name="name" placeholder="Full Name" class="input-field">
+                </div>
+
+                <!-- Email Address Input -->
+                <div>
+                    <input type="email" id="email" name="email" placeholder="Email Address" class="input-field">
+                </div>
+
+                <!-- Message Textarea -->
+                <div>
+                    <textarea id="message" name="message" placeholder="Message" rows="5" class="textarea-field resize-y"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="submit-button">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </section>
+  </main>
+
+
+  <footer>
+    <p>© 2025 QRYPTON — All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Merged script.js and performance.html/testimonials.html inline scripts
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const wrapper = document.querySelector('.glow-btn-wrapper');
+        const glow = document.querySelector('.glow-border');
+
+        if (wrapper && glow) {
+            glow.style.background = `radial-gradient(circle at 50% 50%, rgba(192, 176, 216, 0.6) 0%, rgba(192, 176, 216, 0.05) 80%, transparent 100%)`;
+
+            wrapper.addEventListener('mousemove', (e) => {
+                const rect = wrapper.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(192, 176, 216, 0.7) 0%, rgba(192, 176, 216, 0.12) 60%, transparent 100%)`;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                glow.style.background = `radial-gradient(circle at 50% 50%, rgba(192, 176, 216, 0.6) 0%, rgba(192, 176, 216, 0.05) 80%, transparent 100%)`;
+            });
+        }
+
+        const auraCanvas = document.getElementById("aura-stars");
+        if (auraCanvas) {
+            const ctx = auraCanvas.getContext("2d");
+            const width = auraCanvas.width = auraCanvas.offsetWidth;
+            const height = auraCanvas.height = auraCanvas.offsetHeight;
+
+            const stars = Array.from({ length: 25 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                dx: (Math.random() - 0.5) * 0.15,
+                dy: (Math.random() - 0.5) * 0.15,
+                r: Math.random() * 1.3 + 0.3
+            }));
+
+            function animateAura() {
+                ctx.clearRect(0, 0, width, height);
+                for (let star of stars) {
+                    star.x += star.dx;
+                    star.y += star.dy;
+
+                    if (star.x < 0 || star.x > width) star.dx *= -1;
+                    if (star.y < 0 || star.y > height) star.dy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI);
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.fill();
+                }
+                requestAnimationFrame(animateAura);
+            }
+            animateAura();
+        }
+
+        const heroSection = document.querySelector(".hero");
+        if (heroSection) {
+            const observerHero = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                        }
+                    });
+                },
+                { threshold: 0.2 }
+            );
+            observerHero.observe(heroSection);
+        }
+
+        // --- Performance Section Animations (from performance.html script) ---
+        // Function to show a message box (replaces alert())
+        function showMessageBox(message, type = 'success') {
+            const container = document.getElementById('messageBoxContainer');
+            if (!container) return;
+
+            const messageBox = document.createElement('div');
+            messageBox.className = `message-box ${type}`;
+            messageBox.textContent = message;
+            container.appendChild(messageBox);
+
+            messageBox.offsetWidth; // Trigger reflow
+
+            messageBox.classList.add('show');
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+                messageBox.addEventListener('transitionend', () => {
+                    messageBox.remove();
+                }, { once: true });
+            }, 3000);
+        }
+
+        /**
+         * Animates a number from a start value to an end value over a given duration.
+         */
+        function animateNumber(element, start, end, duration) {
+            let startTime = null;
+            const step = (currentTime) => {
+                if (!startTime) startTime = currentTime;
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const currentValue = Math.floor(progress * (end - start) + start);
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = end + "MB";
+                }
+            };
+            requestAnimationFrame(step);
+        }
+
+        /**
+         * Animates list items sequentially.
+         */
+        function animateListItemsSequentially(items, delayBetweenItems = 0.2) {
+            items.forEach((item, index) => {
+                item.style.transitionDelay = `${index * delayBetweenItems}s`;
+                item.classList.add('animated');
+            });
+        }
+
+        function startEncryptionAnimation() {
+            const circle = document.querySelector('.encryption-progress-circle');
+            if (circle) {
+                circle.classList.remove('animate');
+                void circle.offsetWidth;
+                circle.classList.add('animate');
+            }
+        }
+
+        const revealElements = document.querySelectorAll('.reveal');
+        const observerPerformance = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.querySelector('.encryption-progress-circle')) {
+                        startEncryptionAnimation();
+                    }
+                    const maxFileSizeElement = entry.target.querySelector('#maxFileSizeValue');
+                    if (maxFileSizeElement && !maxFileSizeElement.dataset.animated) {
+                        animateNumber(maxFileSizeElement, 1, 500, 1500);
+                        maxFileSizeElement.dataset.animated = 'true';
+                    }
+                    const formatsBentoItem = entry.target.id === 'formatsBentoItem' ? entry.target : entry.target.querySelector('#formatsBentoItem');
+                    if (formatsBentoItem && !formatsBentoItem.dataset.animated) {
+                        const formatItems = formatsBentoItem.querySelectorAll('.format-item');
+                        animateListItemsSequentially(formatItems, 0.15);
+                        formatsBentoItem.dataset.animated = 'true';
+                    }
+                } else {
+                    if (entry.target.querySelector('.encryption-progress-circle')) {
+                        const circle = entry.target.querySelector('.encryption-progress-circle');
+                        if (circle) circle.classList.remove('animate');
+                    }
+                    const formatsBentoItem = entry.target.id === 'formatsBentoItem' ? entry.target : entry.target.querySelector('#formatsBentoItem');
+                    if (formatsBentoItem) {
+                        const formatItems = formatsBentoItem.querySelectorAll('.format-item');
+                        formatItems.forEach(item => {
+                            item.classList.remove('animated');
+                            item.style.transitionDelay = '0s';
+                        });
+                        formatsBentoItem.dataset.animated = '';
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => {
+            observerPerformance.observe(el);
+        });
+
+        const initialEncryptionMetric = document.querySelector('.encryption-progress-circle');
+        if (initialEncryptionMetric && initialEncryptionMetric.getBoundingClientRect().top < window.innerHeight && initialEncryptionMetric.getBoundingClientRect().bottom > 0) {
+            startEncryptionAnimation();
+        }
+
+        const initialMaxFileSizeMetric = document.querySelector('#maxFileSizeValue');
+        if (initialMaxFileSizeMetric && initialMaxFileSizeMetric.getBoundingClientRect().top < window.innerHeight && initialMaxFileSizeMetric.getBoundingClientRect().bottom > 0 && !initialMaxFileSizeMetric.dataset.animated) {
+            animateNumber(initialMaxFileSizeMetric, 1, 500, 1500);
+            initialMaxFileSizeMetric.dataset.animated = 'true';
+        }
+
+        const initialFormatsBentoItem = document.querySelector('#formatsBentoItem');
+        if (initialFormatsBentoItem && initialFormatsBentoItem.getBoundingClientRect().top < window.innerHeight && initialFormatsBentoItem.getBoundingClientRect().bottom > 0 && !initialFormatsBentoItem.dataset.animated) {
+            const formatItems = initialFormatsBentoItem.querySelectorAll('.format-item');
+            animateListItemsSequentially(formatItems, 0.15);
+            initialFormatsBentoItem.dataset.animated = 'true';
+        }
+
+        // --- Testimonials Carousel Setup (from testimonials.html script) ---
+        function setupInfiniteScroll(carouselTrackId, itemWidth, gap) {
+            const carouselTrack = document.querySelector(carouselTrackId);
+            if (!carouselTrack) return;
+
+            const items = Array.from(carouselTrack.children);
+            const originalItemsCount = items.length;
+            const totalScrollWidth = (itemWidth + gap) * originalItemsCount;
+
+            for (let i = 0; i < originalItemsCount * 2; i++) {
+                carouselTrack.appendChild(items[i % originalItemsCount].cloneNode(true));
+            }
+
+            const styleSheet = document.styleSheets[0];
+            const keyframesRule = `@keyframes scroll-carousel {
+                from { transform: translateX(0); }
+                to { transform: translateX(calc(-1 * ${totalScrollWidth}px)); }
+            }`;
+
+            let ruleIndex = -1;
+            for (let i = 0; i < styleSheet.cssRules.length; i++) {
+                if (styleSheet.cssRules[i].name === 'scroll-carousel') {
+                    ruleIndex = i;
+                    break;
+                }
+            }
+            if (ruleIndex !== -1) {
+                styleSheet.deleteRule(ruleIndex);
+            }
+            styleSheet.insertRule(keyframesRule, styleSheet.cssRules.length);
+        }
+
+        const testimonialCardWidth = 350;
+        const testimonialCardGap = 20;
+
+        setupInfiniteScroll('.carousel-track', testimonialCardWidth, testimonialCardGap);
+
+        window.addEventListener('resize', () => {
+            // Re-calculate for responsive changes if needed, but CSS handles primary responsiveness
+        });
+
+    });
+  </script>
+  <!-- Corrected: Link to script.js in the static/js directory <script src="{{ url_for('static', filename='js/script.js') }}"></script>-->
+  
+
+</body>
+</html>

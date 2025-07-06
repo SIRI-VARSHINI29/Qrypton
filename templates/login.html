@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qrypton - Login, Register, Reset</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base CSS Variables for the theme */
+        :root {
+            --purple-deep: #000000; /* Pure black for deeper contrast */
+            --purple-mid: rgba(255, 255, 255, 0.04); /* Adjusted for glassmorphism background */
+            --purple-accent: #a020f0; /* Brighter purple for accents/neon glow */
+            --purple-light: #6a5acd; /* Slightly softer purple for gradients */
+            --text-primary: #f4f4f5; /* Off-white for primary text */
+            --text-secondary: #a8a2b5; /* Muted gray for secondary text */
+            --border-color: rgba(255, 255, 255, 0.2); /* More prominent border for glass elements */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--purple-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh; /* Ensure full height for background glows */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center content vertically for auth pages */
+        }
+
+        /* Enhanced Background Glows */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before { /* Top-left glow */
+            width: 600px;
+            height: 600px;
+            background: rgba(120, 0, 200, 0.6);
+            top: -200px;
+            left: -200px;
+        }
+
+        body::after { /* Bottom-right glow */
+            width: 800px;
+            height: 800px;
+            background: rgba(160, 32, 240, 0.7);
+            bottom: -300px;
+            right: -300px;
+        }
+
+        /* Glassmorphism effect */
+        .glassmorphism {
+            background: var(--purple-mid);
+            backdrop-filter: blur(40px) saturate(220%);
+            -webkit-backdrop-filter: blur(40px) saturate(220%);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem; /* Consistent rounded edges for containers */
+            box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.5);
+        }
+
+        /* Gradient Text for Main Titles */
+        .gradient-text {
+            background: linear-gradient(to right, var(--text-primary), var(--purple-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Primary Button with Neon Glow */
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 12px; /* Slightly more rounded buttons */
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(to right, var(--purple-light), var(--purple-accent));
+            box-shadow: 0 0 20px rgba(106, 90, 205, 0.7), 0 0 40px rgba(160, 32, 240, 0.5); /* Neon glow */
+            color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(106, 90, 205, 0.9), 0 0 60px rgba(160, 32, 240, 0.7); /* Stronger glow on hover */
+        }
+        
+        /* Secondary Button (for 'Register' and 'Reset' links styled as buttons) */
+        .btn-secondary {
+            display: inline-block;
+            padding: 10px 20px; /* Smaller padding for link-buttons */
+            border-radius: 8px; /* Slightly rounded */
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--purple-accent);
+            color: var(--text-primary);
+        }
+
+        /* Auth Page specific styles */
+        main {
+            margin-top: 100px; /* Adjusted to make space for fixed navbar */
+            display: none; /* All main sections hidden by default */
+            width: 100%;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        main.active {
+            display: flex; /* Only active main section is displayed */
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--purple-mid);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            padding: 50px;
+            border-radius: 12px; /* Consistent rounded edges */
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            position: relative; /* For reveal animation */
+        }
+        
+        .auth-container h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .auth-container p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .auth-form input[type="text"],
+        .auth-form input[type="email"],
+        .auth-form input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px; /* Rounded input fields */
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .auth-form input[type="text"]:focus,
+        .auth-form input[type="email"]:focus,
+        .auth-form input[type="password"]:focus {
+            outline: none;
+            border-color: var(--purple-accent);
+            box-shadow: 0 0 0 3px rgba(160, 32, 240, 0.3); /* Neon glow on focus */
+        }
+
+        /* Styles for checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Spacing below checkbox */
+            margin-top: -10px; /* Pull it slightly up to align better with inputs */
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            appearance: none; /* Hide default checkbox */
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px; /* Slightly rounded checkbox */
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+            outline: none;
+            transition: background-color 0.2s, border-color 0.2s;
+            flex-shrink: 0; /* Prevent it from shrinking */
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background-color: var(--purple-accent);
+            border-color: var(--purple-accent);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::before {
+            content: '✓'; /* Checkmark symbol */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-primary);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .checkbox-group label {
+            margin-left: 10px; /* Space between checkbox and label */
+            margin-bottom: 0; /* Override default label margin */
+            cursor: pointer;
+            font-weight: 400; /* Lighter font for checkbox label */
+            color: var(--text-secondary);
+        }
+
+        .auth-form .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .auth-text-link-container {
+            margin-bottom: 10px; /* Space between links and button */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center; /* Center the links within their container */
+            text-align: center;
+        }
+
+        .auth-text-link {
+            color: var(--text-secondary); /* Default color for the surrounding text */
+            text-decoration: none; /* No default underline for the entire link */
+            transition: color 0.3s ease; /* Smooth transition for hover effects */
+            font-size: 0.9rem; /* Apply a slightly smaller font size to the entire link sentence */
+        }
+        
+        .auth-text-link .link-highlight {
+            color: var(--text-primary); /* White color for specific words */
+            font-weight: 600; /* Make it bold for emphasis */
+            /* Removed text-decoration: underline; */
+        }
+
+        .auth-text-link:hover .link-highlight,
+        .auth-text-link:hover .link-text-secondary {
+            color: var(--purple-accent); /* Both parts glow purple on hover */
+        }
+
+
+        /* Dashboard Placeholder Styles */
+        #dashboard-placeholder h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        #dashboard-placeholder p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        #dashboard-placeholder .btn-primary {
+            margin: 0 auto;
+            display: block;
+            width: fit-content;
+        }
+
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Message Box Styling */
+        #messageBoxContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message-box {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .message-box.error {
+            background-color: rgba(244, 67, 54, 0.8);
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Navbar Specific Styles (from index.html) */
+        @media (max-width: 767px) {
+            .navbar-menu {
+                display: none; /* Hidden by default on mobile */
+                flex-direction: column;
+                width: 100%;
+                background: var(--purple-deep); /* Solid background for dropdown */
+                position: absolute;
+                top: 100%; /* Position below the main header */
+                left: 0;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border-color);
+            }
+            .navbar-menu.active {
+                display: flex; /* Show when active */
+            }
+            .navbar-menu a {
+                padding: 0.75rem 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+            .navbar-toggle {
+                display: block; /* Show hamburger icon on mobile */
+                cursor: pointer;
+            }
+            .navbar-toggle svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .auth-container {
+                padding: 30px;
+                margin: 0 15px; /* Add horizontal margin */
+            }
+            .auth-container h2 {
+                font-size: 1.8rem;
+            }
+            .auth-container p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar (from index.html) -->
+    <header class="fixed top-0 left-0 w-full bg-black bg-opacity-40 text-white z-50 px-6 py-4 flex justify-between items-center backdrop-blur-lg border-b border-white border-opacity-10">
+        <div class="text-xl font-bold gradient-text tracking-wide">
+            <a href="{{ url_for('login') }}">Qrypton</a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="md:hidden navbar-toggle" id="navbar-toggle">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </div>
+
+        <!-- Desktop Navigation & Mobile Dropdown Menu -->
+        <nav class="hidden md:flex gap-6 text-sm font-medium items-center" id="navbar-links">
+            <a href="{{ url_for('home') }}" class="hover:text-purple-300">Home</a>
+        </nav>
+
+        <!-- Mobile-specific menu (will be toggled by JS) -->
+        <nav class="navbar-menu md:hidden" id="mobile-navbar-menu">
+            <a href="{{ url_for('home') }}" class="hover:text-purple-300">Home</a>
+        </nav>
+    </header>
+
+    <!-- Message Box Container -->
+    <div id="messageBoxContainer"></div>
+
+    <!-- Main Content for Login Page -->
+    <main id="login" class="active">
+        <section class="auth-page">
+            <div class="auth-container reveal glassmorphism">
+                <h2>Log In to Qrypton</h2>
+                <p>Welcome back! Let’s keep your videos locked tight.</p>
+                <form class="auth-form" id="login-form" method="POST" action="/login">
+                    <div class="form-group">
+                        <label for="login-email">Username or Email</label>
+                        <input type="text" id="login-email" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remember-me" name="remember">
+                        <label for="remember-me">Remember me</label>
+                    </div>
+                    <div class="auth-text-link-container">
+                        <a href="#reset-password" class="page-link auth-text-link"><span class="link-text-secondary">Can’t remember your password? </span><span class="link-highlight">Reset it</span></a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="auth-text-link-container" style="margin-top: 15px;"> <!-- Adjusted margin for spacing -->
+                        <!-- Corrected: Link to Flask /register route -->
+                        <a href="{{ url_for('register') }}" class="auth-text-link"><span class="link-text-secondary">Don't have an account? </span><span class="link-highlight">Register now</span></a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Main Content for Register Page -->
+    <main id="register">
+        <section class="auth-page">
+            <div class="auth-container reveal glassmorphism">
+                <h2>Register for Qrypton</h2>
+                <p>Join us to encrypt and protect your videos.</p>
+                <form class="auth-form" id="register-form">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                    <div class="auth-text-link-container" style="margin-top: 15px;">
+                        <a href="#login" class="page-link auth-text-link"><span class="link-text-secondary">Already have an account? </span><span class="link-highlight">Login</span></a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Main Content for Reset Password Page -->
+    <main id="reset-password">
+        <section class="auth-page">
+            <div class="auth-container reveal glassmorphism">
+                <h2>Reset Your Password</h2>
+                <p>Enter your email to receive password reset instructions.</p>
+                <form class="auth-form" id="reset-form">
+                    <div class="form-group">
+                        <label for="reset-email">Email</label>
+                        <input type="email" id="reset-email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                    <div class="auth-text-link-container" style="margin-top: 15px;">
+                        <a href="#login" class="page-link auth-text-link"><span class="link-text-secondary">Back to </span><span class="link-highlight">Login</span></a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Simple Dashboard Placeholder -->
+    <main id="dashboard-placeholder">
+        <section class="auth-page">
+            <div class="auth-container reveal glassmorphism">
+                <h2>Welcome to Your Dashboard!</h2>
+                <p>This is a placeholder for your secure video encryption dashboard.</p>
+                <!-- Corrected: Logout button redirect to Flask /login route -->
+                <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('login') }}';">Logout</button>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        // Function to show a message box
+        function showMessageBox(message, type = 'success') {
+            const container = document.getElementById('messageBoxContainer');
+            if (!container) return;
+            const messageBox = document.createElement('div');
+            messageBox.className = `message-box ${type}`;
+            messageBox.textContent = message;
+            container.appendChild(messageBox);
+
+            messageBox.offsetWidth; // Trigger reflow
+
+            messageBox.classList.add('show');
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+                messageBox.addEventListener('transitionend', () => {
+                    messageBox.remove();
+                }, { once: true });
+            }, 3000);
+        }
+
+        // Function to switch between pages/sections
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('main');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                // Re-observe elements for reveal animation on the new page
+                const revealElements = targetPage.querySelectorAll('.reveal');
+                revealElements.forEach(el => {
+                    el.classList.remove('visible'); // Reset visibility for re-animation
+                    revealObserver.observe(el);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Attach click listeners to all page-links that stay on the same page (e.g., login, register, reset)
+            const internalPageLinks = document.querySelectorAll('.page-link');
+            internalPageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Prevent default for internal hash links only
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const pageId = this.getAttribute('href').substring(1);
+                        showPage(pageId);
+                    }
+                });
+            });
+
+            // --- Form Functionality ---
+
+            // Login Form
+            const loginForm = document.getElementById('login-form');
+            if(loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Basic validation (can be expanded)
+                    const email = document.getElementById('login-email').value;
+                    const password = document.getElementById('login-password').value;
+                    const rememberMe = document.getElementById('remember-me').checked;
+
+                    if (email === "" || password === "") {
+                        showMessageBox("Please enter both username/email and password.", "error");
+                        return;
+                    }
+
+                    console.log('Login submitted:', { email, password, rememberMe });
+                    showMessageBox('Login successful! Redirecting to dashboard.', 'success');
+                    // Corrected: Redirect to the Flask dashboard route
+                    setTimeout(() => window.location.href = "{{ url_for('index') }}", 1000); // 1 second delay
+                });
+            }
+
+            // Register Form
+            const registerForm = document.getElementById('register-form');
+            if(registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const username = document.getElementById('register-username').value;
+                    const email = document.getElementById('register-email').value;
+                    const password = document.getElementById('register-password').value;
+                    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                    if (username === "" || email === "" || password === "" || confirmPassword === "") {
+                        showMessageBox("All fields are required for registration.", "error");
+                        return;
+                    }
+                    if (password.length < 8) {
+                        showMessageBox('Password must be at least 8 characters long.', 'error');
+                        return;
+                    }
+                    if (password !== confirmPassword) {
+                        showMessageBox('Passwords do not match.', 'error');
+                        return;
+                    }
+                    
+                    console.log('Registration submitted:', { username, email, password });
+                    showMessageBox('Registration successful! Please login.', 'success');
+                    registerForm.reset(); // Clear form
+                    // Corrected: Redirect to Flask login route
+                    window.location.href = "{{ url_for('login') }}"; 
+                });
+            }
+
+            // Reset Password Form
+            const resetForm = document.getElementById('reset-form');
+            if(resetForm) {
+                resetForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('reset-email').value;
+                    if (email === "") {
+                        showMessageBox("Please enter your email address.", "error");
+                        return;
+                    }
+                    console.log('Password reset requested for:', email);
+                    showMessageBox('If an account exists, a password reset link has been sent to your email.', 'success');
+                    resetForm.reset(); // Clear form
+                    showPage('login'); // Redirect back to login (using showPage for internal section change)
+                });
+            }
+
+            // --- Scroll Animations ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // No unobserve here, as elements might go out and come back into view
+                    } else {
+                        // Optional: remove visible class if out of view to allow re-animation on scroll back
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            // Initially observe all reveal elements on the active page
+            const initialActivePage = document.querySelector('main.active');
+            if (initialActivePage) {
+                const initialRevealElements = initialActivePage.querySelectorAll('.reveal');
+                initialRevealElements.forEach(el => {
+                    revealObserver.observe(el);
+                });
+            }
+
+            // Navbar Mobile Toggle (from index.html)
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const mobileNavbarMenu = document.getElementById('mobile-navbar-menu');
+
+            if (navbarToggle && mobileNavbarMenu) {
+                navbarToggle.addEventListener('click', () => {
+                    mobileNavbarMenu.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

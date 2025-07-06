@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qrypton - Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base CSS Variables for the theme */
+        :root {
+            --purple-deep: #000000; /* Pure black for deeper contrast */
+            --purple-mid: rgba(255, 255, 255, 0.04); /* Adjusted for glassmorphism background */
+            --purple-accent: #a020f0; /* Brighter purple for accents/neon glow */
+            --purple-light: #6a5acd; /* Slightly softer purple for gradients */
+            --text-primary: #f4f4f5; /* Off-white for primary text */
+            --text-secondary: #a8a2b5; /* Muted gray for secondary text */
+            --border-color: rgba(255, 255, 255, 0.2); /* More prominent border for glass elements */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--purple-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh; /* Ensure full height for background glows */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* Enhanced Background Glows */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before { /* Top-left glow */
+            width: 600px;
+            height: 600px;
+            background: rgba(120, 0, 200, 0.6);
+            top: -200px;
+            left: -200px;
+        }
+
+        body::after { /* Bottom-right glow */
+            width: 800px;
+            height: 800px;
+            background: rgba(160, 32, 240, 0.7);
+            bottom: -300px;
+            right: -300px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism effect */
+        .glassmorphism {
+            background: var(--purple-mid);
+            backdrop-filter: blur(40px) saturate(220%);
+            -webkit-backdrop-filter: blur(40px) saturate(220%);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.5);
+        }
+
+        /* Gradient Text for Main Titles */
+        .gradient-text {
+            background: linear-gradient(to right, var(--text-primary), var(--purple-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Primary Button with Neon Glow */
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(to right, var(--purple-light), var(--purple-accent));
+            box-shadow: 0 0 20px rgba(106, 90, 205, 0.7), 0 0 40px rgba(160, 32, 240, 0.5); /* Neon glow */
+            color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(106, 90, 205, 0.9), 0 0 60px rgba(160, 32, 240, 0.7); /* Stronger glow on hover */
+        }
+
+        /* Secondary Button - adjusted for dark theme */
+        .btn-secondary {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--purple-accent);
+            color: var(--text-primary);
+        }
+
+        /* Dashboard Page specific styles (adjust for register.html if needed) */
+        main {
+            padding-top: 100px; /* Adjusted to make space for fixed navbar */
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        .page-section {
+            padding: 40px 0;
+            overflow: hidden;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        
+        /* Mobile Navbar Specific Styles */
+        @media (max-width: 767px) {
+            .navbar-menu {
+                display: none; /* Hidden by default on mobile */
+                flex-direction: column;
+                width: 100%;
+                background: var(--purple-deep); /* Solid background for dropdown */
+                position: absolute;
+                top: 100%; /* Position below the main header */
+                left: 0;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border-color);
+            }
+            .navbar-menu.active {
+                display: flex; /* Show when active */
+            }
+            .navbar-menu a, .navbar-menu button {
+                padding: 0.75rem 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+            .navbar-toggle {
+                display: block; /* Show hamburger icon on mobile */
+                cursor: pointer;
+            }
+            .navbar-toggle svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        /* Existing register.html specific styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Ensure body is a flex container for main */
+            justify-content: flex-start; /* Align items to the start */
+            align-items: center;
+            padding: 0; /* Remove body padding, main will handle it */
+            overflow-x: hidden; /* Hide scrollbars due to large background elements */
+            background: #2D005B; /* Base color for radial gradient */
+            position: relative;
+        }
+
+        /* Background gradient effect */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(74, 0, 119, 0.4), rgba(142, 0, 200, 0.5), rgba(0, 0, 0, 1));
+            z-index: -3; /* Behind other background elements */
+        }
+
+        /* Subtle noise texture overlay */
+        .noise-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.03;
+            mix-blend-mode: soft-light;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+            z-index: -2;
+        }
+
+        /* Top radial glow */
+        .glow-top-large {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120vh;
+            height: 60vh;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            background-color: rgba(186, 104, 255, 0.2); /* Adjusted from purple-400/20 */
+            filter: blur(80px);
+            z-index: -1;
+        }
+        .glow-top-medium {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vh;
+            height: 60vh;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            background-color: rgba(167, 139, 250, 0.2); /* Adjusted from purple-300/20 */
+            filter: blur(60px);
+            z-index: -1;
+            animation: glowPulseLarge 8s infinite mirror ease-in-out;
+        }
+        @keyframes glowPulseLarge {
+            0%, 100% { opacity: 0.15; transform: translateX(-50%) scale(0.98); }
+            50% { opacity: 0.3; transform: translateX(-50%) scale(1.02); }
+        }
+
+        /* Bottom radial glow */
+        .glow-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90vh;
+            height: 90vh;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            background-color: rgba(186, 104, 255, 0.2); /* Adjusted from purple-400/20 */
+            filter: blur(60px);
+            z-index: -1;
+            animation: glowPulseSmall 6s infinite mirror ease-in-out 1s;
+        }
+        @keyframes glowPulseSmall {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Animated glow spots */
+        .glow-spot-left {
+            position: absolute;
+            left: 25%;
+            top: 25%;
+            width: 24rem; /* 96 Tailwind units */
+            height: 24rem;
+            background-color: rgba(255, 255, 255, 0.05); /* white/5 */
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: pulseGlow 4s infinite alternate ease-in-out;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        .glow-spot-right {
+            position: absolute;
+            right: 25%;
+            bottom: 25%;
+            width: 24rem;
+            height: 24rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: pulseGlow 4s infinite alternate ease-in-out 1s; /* delay-1000 */
+            opacity: 0.4;
+            z-index: -1;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        /* Main card container for 3D effect */
+        .card-perspective-container {
+            perspective: 1500px; /* Crucial for 3D transform */
+            width: 100%;
+            max-width: 32rem; /* Exact width as requested: equivalent to Tailwind's max-w-md */
+            position: relative;
+            z-index: 10;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Spring-like transition */
+            opacity: 0; /* Initial state for animation */
+            transform: translateY(20px);
+            animation: fadeInTranslate 0.8s forwards;
+            margin-top: 1.5rem; /* Added margin for spacing below navbar on smaller screens */
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive adjustment for smaller screens */
+        @media (max-width: 768px) {
+            .card-perspective-container {
+                max-width: 90%; /* On small screens, allow it to be wider */
+            }
+        }
+
+        @keyframes fadeInTranslate {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-inner-wrapper {
+            transition: transform 0.1s linear; /* Quick response for mousemove */
+            transform-style: preserve-3d;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Card glow effect */
+        .card-glow-border {
+            position: absolute;
+            inset: -1px; /* -inset-[1px] */
+            border-radius: 1.5rem; /* rounded-2xl */
+            opacity: 0;
+            transition: opacity 0.7s; /* group-hover:opacity-70 transition-opacity duration-700 */
+            animation: cardBoxShadowGlow 4s infinite ease-in-out mirror;
+            pointer-events: none; /* Ensure it doesn't block mouse events */
+        }
+        .card-inner-wrapper:hover .card-glow-border {
+            opacity: 0.7;
+        }
+        @keyframes cardBoxShadowGlow {
+            0%, 100% { box-shadow: 0 0 10px 2px rgba(255,255,255,0.03); opacity: 0.2; }
+            50% { box-shadow: 0 0 15px 5px rgba(255,255,255,0.05); opacity: 0.4; }
+        }
+
+        /* Traveling light beam effect container */
+        .light-beam-container {
+            position: absolute;
+            inset: -1px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            pointer-events: none; /* Ensure it doesn't block mouse events */
+        }
+        .light-beam {
+            position: absolute;
+            background: linear-gradient(to right, transparent, white, transparent);
+            opacity: 0.7;
+            filter: blur(2px);
+            animation-duration: 2.5s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: normal;
+            animation-fill-mode: forwards;
+        }
+        .light-beam-top {
+            top: 0;
+            left: -50%; /* Start off-screen left */
+            height: 3px;
+            width: 50%;
+            animation-name: lightBeamHorizontal;
+            animation-delay: 0s;
+        }
+        .light-beam-right {
+            top: -50%; /* Start off-screen top */
+            right: 0;
+            height: 50%;
+            width: 3px;
+            background: linear-gradient(to bottom, transparent, white, transparent);
+            animation-name: lightBeamVertical;
+            animation-delay: 0.6s;
+        }
+        .light-beam-bottom {
+            bottom: 0;
+            right: -50%; /* Start off-screen right */
+            height: 3px;
+            width: 50%;
+            animation-name: lightBeamHorizontalReverse;
+            animation-delay: 1.2s;
+        }
+        .light-beam-left {
+            bottom: -50%; /* Start off-screen bottom */
+            left: 0;
+            height: 50%;
+            width: 3px;
+            background: linear-gradient(to top, transparent, white, transparent);
+            animation-name: lightBeamVerticalReverse;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes lightBeamHorizontal {
+            0%, 100% { transform: translateX(0%); opacity: 0.3; filter: blur(1px); }
+            50% { transform: translateX(300%); opacity: 0.7; filter: blur(2.5px); } /* Move across and back */
+        }
+        @keyframes lightBeamHorizontalReverse {
+            0%, 100% { transform: translateX(0%); opacity: 0.3; filter: blur(1px); }
+            50% { transform: translateX(-300%); opacity: 0.7; filter: blur(2.5px); }
+        }
+        @keyframes lightBeamVertical {
+            0%, 100% { transform: translateY(0%); opacity: 0.3; filter: blur(1px); }
+            50% { transform: translateY(300%); opacity: 0.7; filter: blur(2.5px); }
+        }
+        @keyframes lightBeamVerticalReverse {
+            0%, 100% { transform: translateY(0%); opacity: 0.3; filter: blur(1px); }
+            50% { transform: translateY(-300%); opacity: 0.7; filter: blur(2.5px); }
+        }
+
+        /* Subtle corner glow spots */
+        .corner-glow {
+            position: absolute;
+            border-radius: 50%;
+            animation-iteration-count: infinite;
+            animation-direction: mirror;
+        }
+        .corner-glow-tl { top: 0; left: 0; height: 5px; width: 5px; background-color: rgba(255,255,255,0.4); filter: blur(1px); animation: pulseCornerGlow 2s ease-in-out; }
+        .corner-glow-tr { top: 0; right: 0; height: 8px; width: 8px; background-color: rgba(255,255,255,0.6); filter: blur(2px); animation: pulseCornerGlow 2.4s ease-in-out 0.5s; }
+        .corner-glow-br { bottom: 0; right: 0; height: 8px; width: 8px; background-color: rgba(255,255,255,0.6); filter: blur(2px); animation: pulseCornerGlow 2.2s ease-in-out 1s; }
+        .corner-glow-bl { bottom: 0; left: 0; height: 5px; width: 5px; background-color: rgba(255,255,255,0.4); filter: blur(1px); animation: pulseCornerGlow 2.3s ease-in-out 1.5s; }
+        @keyframes pulseCornerGlow {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Card border glow on hover */
+        .card-border-gradient {
+            position: absolute;
+            inset: -0.5px; /* -inset-[0.5px] */
+            border-radius: 1.5rem;
+            background: linear-gradient(to right, rgba(255,255,255,0.03), rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .card-inner-wrapper:hover .card-border-gradient {
+            opacity: 0.7;
+        }
+
+        /* Glass card background */
+        .login-card-content {
+            background-color: rgba(0, 0, 0, 0.4); /* bg-black/40 */
+            backdrop-filter: blur(12px); /* backdrop-blur-xl */
+            border-radius: 1.5rem; /* rounded-2xl */
+            padding: 1.5rem; /* p-6 */
+            border: 1px solid rgba(255, 255, 255, 0.05); /* border-white/[0.05] */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+            overflow: hidden;
+            position: relative;
+            z-index: 1; /* Ensure content is above inner patterns */
+        }
+
+        /* Subtle card inner patterns */
+        .card-inner-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.03;
+            background-image: linear-gradient(135deg, white 0.5px, transparent 0.5px), linear-gradient(45deg, white 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            z-index: -1; /* Behind the content */
+        }
+
+        /* Header and Logo */
+        .logo-container {
+            width: 2.5rem; /* w-10 */
+            height: 2.5rem; /* h-10 */
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* border-white/10 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto 1.25rem; /* mx-auto mb-5 */
+            transform: scale(0.5); /* initial scale */
+            opacity: 0; /* initial opacity */
+            animation: logoScaleIn 0.8s forwards;
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes logoScaleIn {
+            to { transform: scale(1); opacity: 1; }
+        }
+        .logo-text {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700; /* font-bold */
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to bottom, white, rgba(255, 255, 255, 0.7)); /* from-white to-white/70 */
+        }
+        .logo-inner-glow {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), transparent); /* from-white/10 to-transparent */
+            opacity: 0.5;
+        }
+
+        h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 600; /* font-semibold */
+            text-align: center;
+            color: white;
+            margin-bottom: 0.5rem; /* mb-2 */
+            opacity: 0; /* initial opacity */
+            transform: translateY(10px); /* initial transform */
+            animation: textFadeIn 0.8s forwards 0.2s;
+        }
+        p {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6); /* text-white/60 */
+            font-size: 0.75rem; /* text-xs */
+            margin-bottom: 2rem; /* mb-8 */
+            opacity: 0;
+            animation: textFadeIn 0.8s forwards 0.3s;
+        }
+        @keyframes textFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input field group styling */
+        .floating-label-group {
+            position: relative;
+            margin-bottom: 1.5rem; /* Adjusted for label movement */
+            transition: all 0.3s ease-in-out;
+        }
+        .floating-label-group.focused .input-highlight {
+            opacity: 1;
+        }
+        .floating-label-group.focused .icon-left {
+            color: white;
+        }
+
+        .floating-label-group input {
+            background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            border: 1px solid transparent; /* border-transparent */
+            color: white; /* text-white */
+            padding: 0.625rem 0.75rem 0.625rem 2.5rem; /* pl-10 pr-3 */
+            height: 2.5rem; /* h-10 */
+            font-size: 1rem; /* text-base */
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem; /* rounded-lg */
+            width: 100%;
+        }
+        .floating-label-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3); /* placeholder:text-white/30 */
+        }
+        .floating-label-group input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.1); /* focus:bg-white/10 */
+            border-color: rgba(255, 255, 255, 0.2); /* focus:border-white/20 */
+        }
+
+        .floating-label-group label {
+            position: absolute;
+            top: 50%;
+            left: 2.5rem; /* Align with input text */
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.3); /* placeholder color */
+            pointer-events: none;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.875rem; /* text-sm */
+            z-index: 1; /* Above input highlight */
+        }
+
+        /* Floating effect when input is focused or has content */
+        .floating-label-group input:focus + label,
+        .floating-label-group input:not(:placeholder-shown) + label {
+            top: 0.3rem; /* Move label up */
+            font-size: 0.6875rem; /* Shrink label */
+            color: rgba(255, 255, 255, 0.5); /* Change label color */
+            transform: translateY(0);
+            left: 0.75rem; /* Adjust left position for better look when floated */
+        }
+
+        /* Input icons */
+        .input-group .icon-left {
+            position: absolute;
+            left: 0.75rem; /* left-3 */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            color: rgba(255, 255, 255, 0.4); /* text-white/40 */
+            transition: color 0.3s;
+            z-index: 10;
+        }
+        .input-group .icon-right {
+            position: absolute;
+            right: 0.75rem; /* right-3 */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+        .input-group .icon-right:hover {
+            color: white;
+        }
+
+        /* Input highlight effect */
+        .input-highlight {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: -1;
+        }
+        .floating-label-group input:focus + label + .input-highlight {
+            opacity: 1;
+        }
+
+        /* Checkbox styling */
+        .checkbox-container {
+            display: flex; /* Use flex to align checkbox and text */
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            font-size: 0.75rem; /* text-xs */
+            color: rgba(255, 255, 255, 0.6); /* text-white/60 */
+            user-select: none;
+            gap: 0.5rem; /* space-x-2 */
+        }
+        .checkbox-container input {
+            appearance: none;
+            height: 1rem; /* h-4 */
+            width: 1rem; /* w-4 */
+            border-radius: 0.25rem; /* rounded */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* border-white/20 */
+            background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .checkbox-container input:checked {
+            background-color: white; /* checked:bg-white */
+            border-color: white; /* checked:border-white */
+        }
+        .checkbox-container input:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); /* focus:ring-1 focus:ring-white/30 */
+        }
+        .checkbox-container input:checked::after {
+            content: '';
+            position: absolute;
+            top: 0.125rem; /* Adjusted for centered checkmark */
+            left: 0.125rem; /* Adjusted for centered checkmark */
+            width: 0.5rem; /* Adjusted width */
+            height: 0.5rem; /* Adjusted height */
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+        .checkbox-container input:not(:checked)::after {
+            opacity: 0;
+        }
+
+        /* Links (Forgot password, Sign In/Up) */
+        .link-style {
+            color: rgba(255, 255, 255, 0.6); /* text-white/60 */
+            transition: color 0.2s;
+            position: relative;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .link-style:hover {
+            color: white;
+        }
+        .link-style::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; /* Just below the text */
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: white;
+            transition: width 0.3s ease-in-out;
+        }
+        .link-style:hover::after {
+            width: 100%;
+        }
+
+        /* Primary Button (Sign Up) */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            background-color: white;
+            color: black;
+            font-weight: 500; /* font-medium */
+            height: 2.5rem; /* h-10 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem; /* gap-1 */
+            font-size: 0.875rem; /* text-sm */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* Tailwind shadow-md approximation */
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary .button-glow {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.1); /* white/10 */
+            border-radius: inherit;
+            filter: blur(16px); /* blur-lg */
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .btn-primary:hover .button-glow {
+            opacity: 0.7;
+        }
+        .btn-primary .button-bg-animation {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent); /* from-white/0 via-white/30 to-white/0 */
+            z-index: -1;
+            animation: sweepEffect 1.5s ease-in-out infinite alternate; /* Simulate Framer Motion x animation */
+            animation-play-state: paused; /* Start paused */
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s;
+        }
+        .btn-primary:hover .button-bg-animation {
+            animation-play-state: running; /* Run on hover */
+            opacity: 1;
+        }
+        .btn-primary.loading .button-bg-animation {
+            animation-play-state: running;
+            opacity: 1;
+        }
+
+        @keyframes sweepEffect {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .btn-primary .spinner {
+            border: 2px solid rgba(0, 0, 0, 0.7); /* border-black/70 */
+            border-top-color: transparent;
+            border-radius: 50%;
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+        .btn-primary.loading .spinner {
+            display: block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .btn-primary.loading .button-text,
+        .btn-primary.loading .arrow-icon {
+            display: none;
+        }
+        .btn-primary .arrow-icon {
+            width: 0.75rem; /* w-3 */
+            height: 0.75rem; /* h-3 */
+            transition: transform 0.3s;
+        }
+        .btn-primary:hover .arrow-icon {
+            transform: translateX(0.25rem); /* translate-x-1 */
+        }
+
+        /* OR Separator */
+        .or-separator {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem; /* mt-2 */
+            margin-bottom: 1.25rem; /* mb-5 */
+        }
+        .or-separator-line {
+            flex-grow: 1;
+            border-top: 1px solid rgba(255, 255, 255, 0.05); /* border-white/5 */
+        }
+        .or-separator span {
+            margin: 0 0.75rem; /* mx-3 */
+            font-size: 0.75rem; /* text-xs */
+            color: rgba(255, 255, 255, 0.4); /* text-white/40 */
+            transition: opacity 0.3s; /* for subtle pulse */
+            animation: orTextPulse 3s infinite ease-in-out;
+        }
+        @keyframes orTextPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Social Button (Google) */
+        .btn-social {
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            color: white;
+            font-weight: 500;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* border-white/10 */
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* gap-2 */
+            font-size: 0.75rem; /* text-xs */
+        }
+        .btn-social:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2); /* hover:border-white/20 */
+        }
+        .btn-social:active {
+            transform: scale(0.98);
+        }
+        .btn-social .button-glow {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.05); /* bg-white/5 */
+            border-radius: inherit;
+            filter: blur(8px); /* blur */
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .btn-social:hover .button-glow {
+            opacity: 0.7;
+        }
+        .btn-social .social-icon {
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.8); /* text-white/80 */
+            transition: color 0.3s;
+        }
+        .btn-social:hover .social-icon {
+            color: white;
+        }
+        .btn-social .button-text {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s;
+        }
+        .btn-social:hover .button-text {
+            color: white;
+        }
+
+        /* Social button hover background animation */
+        .btn-social .button-bg-animation {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent); /* from-white/0 via-white/5 to-white/0 */
+            z-index: -1;
+            transform: translateX(-100%); /* Initial position */
+            transition: transform 1s ease-in-out;
+        }
+        .btn-social:hover .button-bg-animation {
+            transform: translateX(100%);
+        }
+
+        /* Bottom link (Already have an account?) */
+        .bottom-link {
+            text-align: center;
+            font-size: 0.75rem; /* text-xs */
+            color: rgba(255, 255, 255, 0.6); /* text-white/60 */
+            margin-top: 1rem; /* mt-4 */
+            opacity: 0;
+            animation: textFadeIn 0.8s forwards 0.5s;
+        }
+        .bottom-link a {
+            position: relative;
+            display: inline-block;
+            font-weight: 500;
+            color: white;
+            transition: color 0.3s;
+        }
+        .bottom-link a:hover {
+            color: rgba(255, 255, 255, 0.7); /* text-white/70 */
+        }
+        .bottom-link a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: white;
+            transition: width 0.3s ease-in-out;
+        }
+        .bottom-link a:hover::after {
+            width: 100%;
+        }
+
+        /* Message box for validation */
+        .message-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            max-width: 90%;
+            border: 1px solid rgba(221, 221, 221, 0.5); /* Lighter border */
+            animation: fadeInScale 0.3s ease-out forwards;
+            color: #333;
+            backdrop-filter: blur(5px); /* Add blur to message box */
+        }
+        .message-box button {
+            background-color: #6d28d9; /* Deep purple button */
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+        .message-box button:hover {
+            background-color: #5b21aa;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            z-index: 999;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Top Navbar -->
+    <header class="fixed top-0 left-0 w-full bg-black bg-opacity-40 text-white z-50 px-6 py-4 flex justify-between items-center backdrop-blur-lg border-b border-white border-opacity-10">
+        <div class="text-xl font-bold gradient-text tracking-wide">
+            <a href="{{ url_for('home') }}">Qrypton</a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <div class="md:hidden navbar-toggle" id="navbar-toggle">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </div>
+
+        <!-- Desktop Navigation & Mobile Dropdown Menu -->
+        <nav class="hidden md:flex gap-6 text-sm font-medium items-center" id="navbar-links">
+            <a href="{{ url_for('home') }}#hero" class="hover:text-purple-300">Home</a>
+            <a href="{{ url_for('home') }}#features-section" class="hover:text-purple-300">Features</a>
+            <a href="{{ url_for('home') }}#performance-section" class="hover:text-purple-300">Performance</a>
+            <a href="{{ url_for('home') }}#contact-section" class="hover:text-purple-300">Contact</a>
+            <a href="{{ url_for('login') }}" class="hover:text-purple-300">Login</a>
+            <button class="btn btn-secondary" onclick="window.location.href='{{ url_for('home') }}'">Logout</button>
+        </nav>
+
+        <!-- Mobile-specific menu (will be toggled by JS) -->
+        <nav class="navbar-menu md:hidden" id="mobile-navbar-menu">
+            <a href="{{ url_for('home') }}#hero" class="hover:text-purple-300">Home</a>
+            <a href="{{ url_for('home') }}#features-section" class="hover:text-purple-300">Features</a>
+            <a href="{{ url_for('home') }}#performance-section" class="hover:text-purple-300">Performance</a>
+            <a href="{{ url_for('home') }}#contact-section" class="hover:text-purple-300">Contact</a>
+            <a href="{{ url_for('home') }}" class="hover:text-purple-300 mt-4 mx-auto w-1/2">Login</a>
+            <button class="btn btn-secondary mt-2 mx-auto w-1/2" onclick="window.location.href='{{ url_for('home') }}'">Logout</button>
+        </nav>
+    </header>
+
+    <!-- Message Box and Overlay -->
+    <div class="message-box" id="messageBox">
+        <p id="messageText" class="text-lg font-semibold text-gray-800"></p>
+        <button id="closeMessageBox">OK</button>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main>
+        <!-- Background elements -->
+        <div class="noise-overlay"></div>
+        <div class="glow-top-large"></div>
+        <div class="glow-top-medium"></div>
+        <div class="glow-bottom"></div>
+        <div class="glow-spot-left"></div>
+        <div class="glow-spot-right"></div>
+
+        <!-- Main Card Container for 3D Effect -->
+        <div class="card-perspective-container" id="cardContainer">
+            <div class="card-inner-wrapper" id="cardInner">
+                <!-- Card Glow Border -->
+                <div class="card-glow-border"></div>
+                <!-- Traveling Light Beams -->
+                <div class="light-beam-container">
+                    <div class="light-beam light-beam-top"></div>
+                    <div class="light-beam light-beam-right"></div>
+                    <div class="light-beam light-beam-bottom"></div>
+                    <div class="light-beam light-beam-left"></div>
+                    <!-- Corner glow spots -->
+                    <div class="corner-glow corner-glow-tl"></div>
+                    <div class="corner-glow corner-glow-tr"></div>
+                    <div class="corner-glow corner-glow-br"></div>
+                    <div class="corner-glow corner-glow-bl"></div>
+                </div>
+                <!-- Card Border Gradient -->
+                <div class="card-border-gradient"></div>
+
+                <!-- Glass Card Content -->
+                <div class="login-card-content">
+                    <!-- Inner Pattern -->
+                    <div class="card-inner-pattern"></div>
+
+                    <!-- Header -->
+                    <h2 class="text-3xl font-semibold text-center text-white mb-2">Create Account</h2>
+                    <p class="text-center text-gray-400 mb-8">Sign up to get started</p>
+
+                    <!-- Sign Up Form -->
+                    <form id="signupForm" class="space-y-4" method="POST" action="{{ url_for('register') }}">
+                        <!-- Username Input -->
+                        <div class="floating-label-group input-group">
+                            <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder=" "
+                                autocomplete="username"
+                                required
+                                class="block w-full"
+                            >
+                            <label for="username">Username</label>
+                            <div class="input-highlight"></div>
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="floating-label-group input-group">
+                            <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder=" "
+                                autocomplete="email"
+                                required
+                                class="block w-full"
+                            >
+                            <label for="email">Email address</label>
+                            <div class="input-highlight"></div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="floating-label-group input-group">
+                            <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                            </svg>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder=" "
+                                autocomplete="new-password"
+                                required
+                                class="block w-full pr-10"
+                            >
+                            <label for="password">Password</label>
+                            <svg id="togglePassword" class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <div class="input-highlight"></div>
+                        </div>
+
+                        <!-- Confirm Password Input -->
+                        <div class="floating-label-group input-group">
+                            <svg class="icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                            </svg>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder=" "
+                                autocomplete="new-password"
+                                required
+                                class="block w-full pr-10"
+                            >
+                            <label for="confirmPassword">Confirm Password</label>
+                            <svg id="toggleConfirmPassword" class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <div class="input-highlight"></div>
+                        </div>
+
+                        <!-- Remember me checkbox -->
+                        <div class="flex items-center justify-between pt-1">
+                            <div class="flex items-center">
+                                <input
+                                    id="remember-me"
+                                    name="remember-me"
+                                    type="checkbox"
+                                    class="cursor-pointer"
+                                >
+                                <label for="remember-me" class="checkbox-container">
+                                    Remember me
+                                </label>
+                            </div>
+                            <div class="text-xs">
+                                <a href="#" class="link-style">Forgot password?</a>
+                            </div>
+                        </div>
+
+                        <!-- Sign Up Button -->
+                        <button type="submit" id="signupButton" class="w-full btn-primary">
+                            <div class="button-glow"></div>
+                            <div class="button-bg-animation"></div>
+                            <span class="button-text">Sign Up</span>
+                            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            <div class="spinner"></div>
+                        </button>
+                    </form>
+
+                    <!-- OR Separator -->
+                    <div class="or-separator">
+                        <div class="or-separator-line"></div>
+                        <span>or</span>
+                        <div class="or-separator-line"></div>
+                    </div>
+
+                    <!-- Google Sign Up -->
+                    <button type="button" class="w-full btn-social" id="googleSignupButton">
+                        <div class="button-glow"></div>
+                        <div class="button-bg-animation"></div>
+                        <div class="social-icon">
+                            <!-- Google SVG simplified for display. Original likely more complex. -->
+                            G
+                        </div>
+                        <span class="button-text">Sign up with Google</span>
+                    </button>
+
+                    <!-- Already have an account link -->
+                    <p class="bottom-link">
+                        Already have an account? <a href="#" class="link-style">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signupForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+            const closeMessageBox = document.getElementById('closeMessageBox');
+            const overlay = document.getElementById('overlay');
+            const signupButton = document.getElementById('signupButton');
+            const googleSignupButton = document.getElementById('googleSignupButton'); // Get the Google button
+
+            // 3D Card Tilt Elements
+            const cardContainer = document.getElementById('cardContainer');
+            const cardInner = document.getElementById('cardInner');
+
+            // Function to show the custom message box
+            function showMessageBox(message) {
+                messageText.textContent = message;
+                messageBox.style.display = 'block';
+                overlay.style.display = 'block';
+            }
+
+            // Function to hide the custom message box
+            function hideMessageBox() {
+                messageBox.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+
+            // Toggle password visibility function
+            function toggleVisibility(inputElement, toggleElement) {
+                const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputElement.setAttribute('type', type);
+                // Change eye icon based on visibility
+                if (type === 'text') {
+                    toggleElement.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.54 18.54 0 012.38-2.61M5.93 11.23A7.95 7.95 0 014 12c.57 2.18 2.05 4.14 4.07 5.16l1.32-1.32M12 4c.57 0 1.13.06 1.68.18l-1.89 1.89A3 3 0 0012 9a3 3 0 003 3a3 3 0 001.07-.19l1.89 1.89A7.95 7.95 0 0120 12c-.57-2.18-2.05-4.14-4.07-5.16l-1.32 1.32M1.93 1.93L22.07 22.07" />';
+                } else {
+                    toggleElement.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+                }
+            }
+
+            // Attach toggle handlers
+            togglePassword.addEventListener('click', () => toggleVisibility(passwordInput, togglePassword));
+            toggleConfirmPassword.addEventListener('click', () => toggleVisibility(confirmPasswordInput, toggleConfirmPassword));
+
+            // Input focus/blur handlers for highlighting
+            document.querySelectorAll('.floating-label-group input').forEach(input => {
+                const group = input.closest('.floating-label-group');
+                input.addEventListener('focus', () => group.classList.add('focused'));
+                input.addEventListener('blur', () => {
+                    if (!input.value) { // Only remove focused class if input is empty
+                        group.classList.remove('focused');
+                    }
+                });
+                // Initialize state for inputs with pre-filled values (e.g., from autocomplete)
+                if (input.value) {
+                    group.classList.add('focused');
+                }
+            });
+
+            // 3D Card Tilt Logic
+            const MAX_ROTATION = 10; // Max rotation in degrees
+            cardContainer.addEventListener('mousemove', (e) => {
+                const rect = cardContainer.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const mouseX = e.clientX - centerX;
+                const mouseY = e.clientY - centerY;
+
+                // Calculate rotation based on mouse position
+                // RotateX inversely proportional to mouseY
+                const rotateX = -((mouseY / (rect.height / 2)) * MAX_ROTATION);
+                // RotateY directly proportional to mouseX
+                const rotateY = ((mouseX / (rect.width / 2)) * MAX_ROTATION);
+
+                cardInner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            cardContainer.addEventListener('mouseleave', () => {
+                cardInner.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+
+
+            // Form Submission and Validation for main signup button
+            signupForm.addEventListener('submit', (event) => {
+               
+
+                const username = document.getElementById('username').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = passwordInput.value.trim();
+                const confirmPassword = confirmPasswordInput.value.trim();
+
+                let isValid = true;
+                let message = '';
+
+                if (!username || !email || !password || !confirmPassword) {
+                    message = 'Please fill in all fields.';
+                    isValid = false;
+                } else if (password.length < 6) {
+                    message = 'Password must be at least 6 characters long.';
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    message = 'Passwords do not match.';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                    showMessageBox(message);
+                    return;
+                }
+
+                event.preventDefault();
+
+                // Simulate loading
+                signupButton.classList.add('loading');
+                signupButton.disabled = true;
+
+                setTimeout(() => {
+                    signupButton.classList.remove('loading');
+                    signupButton.disabled = false;
+                    showMessageBox('Sign up successful!');
+                    // In a real application, you would send this data to a server for registration.
+                    // You might redirect the user or update the UI here.
+                    signupForm.submit();
+                }, 3000); // Simulate network request delay
+
+            });
+
+            // Event listener for Google Sign Up button
+            googleSignupButton.addEventListener('click', () => {
+                // Simulate loading for Google button
+                googleSignupButton.classList.add('loading');
+                googleSignupButton.disabled = true;
+
+                setTimeout(() => {
+                    googleSignupButton.classList.remove('loading');
+                    googleSignupButton.disabled = false;
+                    showMessageBox('Google Sign-up successful!');
+                    // In a real application, this would redirect to Google's OAuth login,
+                    // and then a backend would handle the token exchange.
+                }, 3000); // Simulate network request delay
+            });
+
+
+            // Event listeners to close the message box
+            closeMessageBox.addEventListener('click', hideMessageBox);
+            overlay.addEventListener('click', hideMessageBox);
+
+            // Navbar Mobile Toggle
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const mobileNavbarMenu = document.getElementById('mobile-navbar-menu');
+
+            if (navbarToggle && mobileNavbarMenu) {
+                navbarToggle.addEventListener('click', () => {
+                    mobileNavbarMenu.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

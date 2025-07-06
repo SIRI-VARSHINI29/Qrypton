@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qrypton - Video Processed!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Corrected: Link to styles.css in the static/css directory  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base CSS Variables for the theme */
+        :root {
+            --purple-deep: #000000; /* Pure black for deeper contrast */
+            --purple-mid: rgba(255, 255, 255, 0.04); /* Adjusted for glassmorphism background */
+            --purple-accent: #a020f0; /* Brighter purple for accents/neon glow */
+            --purple-light: #6a5acd; /* Slightly softer purple for gradients */
+            --text-primary: #f4f4f5; /* Off-white for primary text */
+            --text-secondary: #a8a2b5; /* Muted gray for secondary text */
+            --border-color: rgba(255, 255, 255, 0.2); /* More prominent border for glass elements */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--purple-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Enhanced Background Glows */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.7;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before { /* Top-left glow */
+            width: 600px;
+            height: 600px;
+            background: rgba(120, 0, 200, 0.6);
+            top: -200px;
+            left: -200px;
+        }
+
+        body::after { /* Bottom-right glow */
+            width: 800px;
+            height: 800px;
+            background: rgba(160, 32, 240, 0.7);
+            bottom: -300px;
+            right: -300px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--purple-mid);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .auth-container p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        /* Primary Button with Neon Glow */
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(to right, var(--purple-light), var(--purple-accent));
+            box-shadow: 0 0 20px rgba(106, 90, 205, 0.7), 0 0 40px rgba(160, 32, 240, 0.5);
+            color: var(--text-primary);
+            margin-bottom: 15px; /* Added margin for spacing between elements */
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(106, 90, 205, 0.9), 0 0 60px rgba(160, 32, 240, 0.7);
+        }
+
+        /* Styling for action links */
+        .action-link {
+            display: block; /* Make them block elements for better spacing */
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 15px; /* Spacing between links/buttons */
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 2px; /* For the underline effect */
+        }
+
+        .action-link:hover {
+            color: var(--purple-accent);
+        }
+
+        .action-link::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background-color: var(--purple-accent);
+            transition: width 0.3s ease-in-out;
+        }
+
+        .action-link:hover::after {
+            width: 100%;
+        }
+
+        /* Success animation styles */
+        .success-animation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .success-checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(45deg, var(--purple-light), var(--purple-accent));
+            box-shadow: 0 0 30px rgba(160, 32, 240, 0.6), 0 0 60px rgba(106, 90, 205, 0.5);
+            animation: pulseGlow 2s infinite alternate ease-in-out;
+            transform: scale(0);
+            opacity: 0;
+            animation: fadeInScale 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation-delay: 0.5s; /* Delay after page loads */
+        }
+
+        @keyframes fadeInScale {
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 30px rgba(160, 32, 240, 0.6), 0 0 60px rgba(106, 90, 205, 0.5); }
+            50% { box-shadow: 0 0 45px rgba(160, 32, 240, 0.8), 0 0 80px rgba(106, 90, 205, 0.7); }
+            100% { box-shadow: 0 0 30px rgba(160, 32, 240, 0.6), 0 0 60px rgba(106, 90, 205, 0.5); }
+        }
+
+        .checkmark-icon {
+            font-size: 3rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Message Box Styling */
+        #messageBoxContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message-box {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .message-box.error {
+            background-color: rgba(244, 67, 54, 0.8);
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .auth-container {
+                padding: 30px;
+                margin: 0 15px;
+            }
+            .auth-container h2 {
+                font-size: 2rem;
+            }
+            .auth-container p {
+                font-size: 0.9rem;
+            }
+            .btn-primary {
+                padding: 12px 24px;
+            }
+            .action-link {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Message Box Container -->
+    <div id="messageBoxContainer"></div>
+
+    <main class="auth-page">
+        <div class="auth-container glassmorphism">
+            <div class="success-animation-container">
+                <div class="success-checkmark">
+                    <span class="checkmark-icon">✓</span>
+                </div>
+            </div>
+            <h2>Video Processed Successfully!</h2>
+            <p>Your video has been securely encrypted and watermarked. You can now download the reconstructed video or view its individual frames.</p>
+            
+            <!-- FORM for triggering reconstruction and download via Flask backend -->
+            <form id="reconstruct-form" action="{{ url_for('reconstruct_video') }}" method="POST">
+                <!-- Pass the video_filename to the Flask backend -->
+                <input type="hidden" name="video_filename" id="reconstruct-video-filename">
+                <button type="submit" class="btn btn-primary" id="download-button">Reconstruct and Download</button>
+            </form>
+            
+            <!-- Link to split_frames.html, passing the video filename dynamically -->
+            <a href="#" id="view-frames-link" class="action-link">View Split Frames</a>
+            
+            <!-- Back to Dashboard button -->
+            <button type="button" class="btn-secondary action-link" id="back-to-dashboard-button">Back to Dashboard</button>
+        </div>
+    </main>
+
+    <script>
+        // Function to show a message box (replaces alert())
+        function showMessageBox(message, type = 'success') {
+            const container = document.getElementById('messageBoxContainer');
+            if (!container) return;
+            const messageBox = document.createElement('div');
+            messageBox.className = `message-box ${type}`;
+            messageBox.textContent = message;
+            container.appendChild(messageBox);
+
+            // Trigger reflow to ensure animation plays
+            messageBox.offsetWidth;
+
+            messageBox.classList.add('show');
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+                messageBox.addEventListener('transitionend', () => {
+                    messageBox.remove();
+                }, { once: true });
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const reconstructForm = document.getElementById('reconstruct-form');
+            const downloadButton = document.getElementById('download-button'); // This is now the submit button for the form
+            const viewFramesLink = document.getElementById('view-frames-link');
+            const backToDashboardButton = document.getElementById('back-to-dashboard-button');
+            const reconstructVideoFilenameInput = document.getElementById('reconstruct-video-filename');
+
+            // Get video_filename from URL query parameter (from the initial redirect from /upload)
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoFilename = urlParams.get('video_filename'); 
+
+            // Set the hidden input field's value with the video filename
+            if (videoFilename) {
+                reconstructVideoFilenameInput.value = videoFilename;
+                // Update the "View Split Frames" link dynamically
+                viewFramesLink.href = '{{ url_for("split_frames", video_filename='PLACEHOLDER') }}'.replace('PLACEHOLDER', encodeURIComponent(videoFilename));
+            } else {
+                showMessageBox('Video filename not found in URL. Cannot proceed with reconstruction or linking to frames.', 'error');
+                // Hide relevant elements if no video filename is present
+                if (reconstructForm) reconstructForm.style.display = 'none';
+                if (viewFramesLink) viewFramesLink.style.display = 'none';
+            }
+
+
+            // Handle Reconstruct and Download button click (now a form submission)
+            // No direct click listener needed on the button itself for the download action,
+            // as the form's submit event will handle it.
+            if (reconstructForm) {
+                reconstructForm.addEventListener('submit', function() {
+                    downloadButton.textContent = 'Preparing download...';
+                    downloadButton.disabled = true;
+                    showMessageBox('Initiating video reconstruction and download...', 'success');
+                });
+            }
+
+            // Handle Back to Dashboard button click
+            if (backToDashboardButton) {
+                backToDashboardButton.addEventListener('click', () => {
+                    showMessageBox('Navigating back to dashboard.', 'info');
+                    window.location.href = "{{ url_for('index') }}"; // Direct to Flask dashboard route
+                });
+            }
+        });
+    </script>
+</body>
+</html>
